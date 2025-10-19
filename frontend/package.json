@@ -50,5 +50,9 @@
     "autoprefixer": "^10.4.15",
     "postcss": "^8.4.29"
   },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
   "proxy": "http://localhost:5000"
 }
