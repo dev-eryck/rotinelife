@@ -2,6 +2,27 @@
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.1.6] - 2024-01-XX - Correção Definitiva: Base Path
+
+### 🚨 **Correção Definitiva do Deploy**
+- **Base path correto** - `base = "frontend"` funciona corretamente
+- **Publish path relativo** - `build` funciona com base
+- **Comando simples** - `npm ci --silent && npm run build`
+- **Build testado** localmente e funcionando perfeitamente
+
+### 🔧 **Configuração Definitiva**
+```toml
+[build]
+  base = "frontend"        # Executa build na pasta frontend/
+  publish = "build"        # Publica frontend/build/ (relativo)
+  command = "npm ci --silent && npm run build"
+```
+
+### ✅ **Status Definitivo**
+- **Build local**: ✅ Funcionando perfeitamente
+- **Base path**: ✅ Funciona corretamente
+- **Deploy**: ✅ Pronto para Netlify
+
 ## [1.1.5] - 2024-01-XX - Correção Final: Comando Explícito
 
 ### 🚨 **Correção Final do Deploy**
