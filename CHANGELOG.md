@@ -2,6 +2,27 @@
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.1.4] - 2024-01-XX - Correção Definitiva: Publish Path
+
+### 🚨 **Correção Definitiva do Deploy**
+- **Publish path corrigido** de `frontend/build` para `build` (relativo)
+- **Erro resolvido**: Netlify interpretava como `frontend/frontend/build`
+- **Path relativo** funciona corretamente com `base = "frontend"`
+- **Build testado** localmente e funcionando perfeitamente
+
+### 🔧 **Configuração Definitiva**
+```toml
+[build]
+  base = "frontend"        # Executa build na pasta frontend/
+  publish = "build"        # Publica frontend/build/ (relativo)
+  command = "npm ci --silent && npm run build"
+```
+
+### ✅ **Status Final**
+- **Build local**: ✅ Funcionando perfeitamente
+- **Publish path**: ✅ Corrigido (não mais duplicado)
+- **Deploy**: ✅ Pronto para Netlify
+
 ## [1.1.3] - 2024-01-XX - Correção Final: Netlify Build Path
 
 ### 🚨 **Correção Final do Deploy**
