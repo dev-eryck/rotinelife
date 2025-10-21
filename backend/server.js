@@ -10,7 +10,7 @@ const app = express();
 // Middleware de segurança
 app.use(helmet());
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? 'https://seu-dominio.com' : 'http://localhost:3000',
+  origin: process.env.NODE_ENV === 'production' ? 'https://rotinelife.netlify.app' : 'http://localhost:3000',
   credentials: true
 }));
 
