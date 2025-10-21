@@ -2,6 +2,20 @@
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.1.2] - 2024-01-XX - Correção Crítica: Path do Netlify
+
+### 🚨 **Correção Crítica do Deploy**
+- **netlify.toml movido** para pasta `frontend/` para resolver conflito de paths
+- **Base path removido** - Netlify agora executa diretamente na pasta frontend
+- **Publish path corrigido** - `build` agora relativo à pasta frontend
+- **index.html encontrado** - Build gera arquivos corretamente em `frontend/build/`
+
+### 🔧 **Detalhes Técnicos**
+- **Problema**: Netlify procurava `index.html` em `/frontend/public/` antes do build
+- **Solução**: `netlify.toml` movido para `frontend/` com paths relativos
+- **Resultado**: Build executa na pasta correta e gera `frontend/build/index.html`
+- **Status**: Deploy deve funcionar agora
+
 ## [1.1.1] - 2024-01-XX - Correção Crítica: Versão Node.js
 
 ### 🚨 **Correção Crítica**
