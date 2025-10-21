@@ -2,6 +2,26 @@
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.1.5] - 2024-01-XX - Correção Final: Comando Explícito
+
+### 🚨 **Correção Final do Deploy**
+- **Base removido** - `base = "frontend"` estava causando conflito
+- **Comando explícito** - `cd frontend && npm ci --silent && npm run build`
+- **Publish path absoluto** - `frontend/build` para evitar confusão
+- **Build testado** localmente e funcionando perfeitamente
+
+### 🔧 **Configuração Final**
+```toml
+[build]
+  publish = "frontend/build"                    # Path absoluto
+  command = "cd frontend && npm ci --silent && npm run build"
+```
+
+### ✅ **Status Final**
+- **Build local**: ✅ Funcionando perfeitamente
+- **Comando explícito**: ✅ Executa na pasta correta
+- **Deploy**: ✅ Pronto para Netlify
+
 ## [1.1.4] - 2024-01-XX - Correção Definitiva: Publish Path
 
 ### 🚨 **Correção Definitiva do Deploy**
