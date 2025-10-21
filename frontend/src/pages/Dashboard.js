@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useData } from '../contexts/DataContext';
-import { useToast } from '../contexts/ToastContext';
+// import { useToast } from '../contexts/ToastContext'; // Removido - não utilizado
 import LoadingSpinner from '../components/LoadingSpinner';
 import { 
   TrendingUp, 
   TrendingDown, 
   DollarSign, 
   Target, 
-  CreditCard, 
   Plus,
   ArrowUpRight,
   ArrowDownRight,
-  Calendar,
   AlertCircle,
   HelpCircle,
   BarChart3,
@@ -23,7 +21,7 @@ import {
 const Dashboard = () => {
   const { user } = useAuth();
   const { stats, transactions, budgets, goals, loading } = useData();
-  const { error } = useToast();
+  // const { error } = useToast(); // Removido - não utilizado
   const navigate = useNavigate();
 
   // Pegar as 5 transações mais recentes

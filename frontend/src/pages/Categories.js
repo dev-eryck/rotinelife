@@ -18,7 +18,7 @@ const Categories = () => {
       const response = await axios.get('/api/categories');
       setCategories(response.data);
     } catch (error) {
-      console.error('Erro ao carregar categorias:', error);
+      // console.error('Erro ao carregar categorias:', error);
     } finally {
       setLoading(false);
     }
@@ -30,7 +30,7 @@ const Categories = () => {
         await axios.delete(`/api/categories/${id}`);
         fetchCategories();
       } catch (error) {
-        console.error('Erro ao deletar categoria:', error);
+        // console.error('Erro ao deletar categoria:', error);
       }
     }
   };

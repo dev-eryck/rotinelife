@@ -8,7 +8,7 @@ import LoadingSpinner from './LoadingSpinner';
 const BudgetModal = ({ budget, onClose, onSave }) => {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
-  const { register, handleSubmit, formState: { errors }, reset, watch } = useForm({
+  const { register, handleSubmit, formState: { errors }, reset } = useForm({
     defaultValues: {
       category: '',
       amount: '',
@@ -41,7 +41,7 @@ const BudgetModal = ({ budget, onClose, onSave }) => {
       const response = await axios.get('/api/categories?type=expense');
       setCategories(response.data);
     } catch (error) {
-      console.error('Erro ao carregar categorias:', error);
+      // console.error('Erro ao carregar categorias:', error);
     }
   };
 
@@ -71,12 +71,13 @@ const BudgetModal = ({ budget, onClose, onSave }) => {
     }
   };
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(value);
-  };
+  // Função removida - não utilizada
+  // const formatCurrency = (value) => {
+  //   return new Intl.NumberFormat('pt-BR', {
+  //     style: 'currency',
+  //     currency: 'BRL'
+  //   }).format(value);
+  // };
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">

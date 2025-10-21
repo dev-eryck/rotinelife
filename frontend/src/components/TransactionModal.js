@@ -7,7 +7,7 @@ import LoadingSpinner from './LoadingSpinner';
 
 const TransactionModal = ({ transaction, categories, onClose, onSave }) => {
   const [loading, setLoading] = useState(false);
-  const { register, handleSubmit, formState: { errors }, reset, watch, setValue } = useForm({
+  const { register, handleSubmit, formState: { errors }, reset, watch } = useForm({
     defaultValues: {
       type: 'expense',
       amount: '',

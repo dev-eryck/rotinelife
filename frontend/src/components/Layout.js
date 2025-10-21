@@ -37,7 +37,7 @@ const Layout = ({ children }) => {
       await logout();
       navigate('/login');
     } catch (error) {
-      console.error('Erro ao fazer logout:', error);
+      // console.error('Erro ao fazer logout:', error);
     }
   };
 

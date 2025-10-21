@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useData } from '../contexts/DataContext';
 import { useToast } from '../contexts/ToastContext';
@@ -20,7 +20,7 @@ const Budgets = () => {
   const [showModal, setShowModal] = useState(false);
   const [editingBudget, setEditingBudget] = useState(null);
 
-  const { register, handleSubmit, formState: { errors }, reset, setValue, watch } = useForm({
+  const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm({
     defaultValues: {
       category: '',
       limit: '',

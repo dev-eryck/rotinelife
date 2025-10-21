@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { X, Flag, DollarSign, Calendar, Target, FileText } from 'lucide-react';
+import { X, Flag, DollarSign, Calendar, FileText } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import LoadingSpinner from './LoadingSpinner';
@@ -44,7 +44,7 @@ const GoalModal = ({ goal, onClose, onSave }) => {
       const response = await axios.get('/api/categories');
       setCategories(response.data);
     } catch (error) {
-      console.error('Erro ao carregar categorias:', error);
+      // console.error('Erro ao carregar categorias:', error);
     }
   };
 
@@ -75,12 +75,13 @@ const GoalModal = ({ goal, onClose, onSave }) => {
     }
   };
 
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(value);
-  };
+  // Função removida - não utilizada
+  // const formatCurrency = (value) => {
+  //   return new Intl.NumberFormat('pt-BR', {
+  //     style: 'currency',
+  //     currency: 'BRL'
+  //   }).format(value);
+  // };
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">

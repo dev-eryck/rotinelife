@@ -3,6 +3,28 @@ import axios from 'axios';
 import { API_ENDPOINTS } from '../config/api';
 import toast from 'react-hot-toast';
 
+// Configurar interceptor global de erro
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Token expirado ou inválido
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    } else if (error.response?.status === 429) {
+      // Rate limit
+      toast.error('Muitas requisições. Tente novamente em alguns minutos.');
+    } else if (error.response?.status >= 500) {
+      // Erro do servidor
+      toast.error('Erro interno do servidor. Tente novamente mais tarde.');
+    } else if (!error.response) {
+      // Erro de rede
+      toast.error('Erro de conexão. Verifique sua internet.');
+    }
+    return Promise.reject(error);
+  }
+);
+
 const AuthContext = createContext();
 
 const initialState = {
@@ -75,7 +97,7 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
           // Só fazer logout se não for erro de rate limiting
           if (error.response?.status !== 429) {
-            console.error('Token inválido:', error);
+            // console.error('Token inválido:', error);
             dispatch({ type: 'LOGOUT' });
           }
         }

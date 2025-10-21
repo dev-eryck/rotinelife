@@ -58,7 +58,7 @@ const Settings = () => {
       setValue('budgetLabel', response.data.customLabels.budget);
       setValue('goalLabel', response.data.customLabels.goal);
     } catch (error) {
-      console.error('Erro ao carregar configurações:', error);
+      // console.error('Erro ao carregar configurações:', error);
     }
   }, [user, setValue]);
 
@@ -72,7 +72,7 @@ const Settings = () => {
       await axios.put('/api/auth/profile', data);
       updateUser(data);
     } catch (error) {
-      console.error('Erro ao atualizar perfil:', error);
+      // console.error('Erro ao atualizar perfil:', error);
     } finally {
       setLoading(false);
     }
@@ -87,7 +87,7 @@ const Settings = () => {
         preferences: { ...prev.preferences, ...data }
       }));
     } catch (error) {
-      console.error('Erro ao atualizar preferências:', error);
+      // console.error('Erro ao atualizar preferências:', error);
     } finally {
       setLoading(false);
     }
@@ -102,7 +102,7 @@ const Settings = () => {
         customLabels: { ...prev.customLabels, ...data }
       }));
     } catch (error) {
-      console.error('Erro ao atualizar rótulos:', error);
+      // console.error('Erro ao atualizar rótulos:', error);
     } finally {
       setLoading(false);
     }
@@ -117,7 +117,7 @@ const Settings = () => {
         notifications: { ...prev.notifications, ...data }
       }));
     } catch (error) {
-      console.error('Erro ao atualizar notificações:', error);
+      // console.error('Erro ao atualizar notificações:', error);
     } finally {
       setLoading(false);
     }
@@ -135,7 +135,7 @@ const Settings = () => {
       link.click();
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Erro ao exportar dados:', error);
+      // console.error('Erro ao exportar dados:', error);
     }
   };
 
@@ -149,7 +149,7 @@ const Settings = () => {
       await axios.post('/api/settings/import', { data });
       fetchSettings();
     } catch (error) {
-      console.error('Erro ao importar dados:', error);
+      // console.error('Erro ao importar dados:', error);
     }
   };
 

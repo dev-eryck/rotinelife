@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { X, Tag, Palette, Hash } from 'lucide-react';
+import { X, Tag } from 'lucide-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import LoadingSpinner from './LoadingSpinner';

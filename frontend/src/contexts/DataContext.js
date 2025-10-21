@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { useAuth } from './AuthContext';
+// import { useAuth } from './AuthContext'; // Removido - não utilizado
 
 const DataContext = createContext();
 
@@ -95,7 +95,7 @@ const initialState = {
 
 export const DataProvider = ({ children }) => {
   const [state, dispatch] = useReducer(dataReducer, initialState);
-  const { user } = useAuth();
+  // const { user } = useAuth(); // Removido - não utilizado
 
   // Calcular estatísticas
   const calculateStats = () => {

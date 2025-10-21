@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useData } from '../contexts/DataContext';
 import { useToast } from '../contexts/ToastContext';
@@ -6,7 +6,6 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import { 
   Plus, 
   Target, 
-  Calendar, 
   Edit, 
   Trash2, 
   TrendingUp,
@@ -23,7 +22,7 @@ const Goals = () => {
   const [showAddMoneyModal, setShowAddMoneyModal] = useState(false);
   const [selectedGoal, setSelectedGoal] = useState(null);
 
-  const { register, handleSubmit, formState: { errors }, reset, setValue, watch } = useForm({
+  const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm({
     defaultValues: {
       title: '',
       description: '',
@@ -168,13 +167,14 @@ const Goals = () => {
     }).format(new Date(date));
   };
 
-  const getDaysRemaining = (deadline) => {
-    const today = new Date();
-    const deadlineDate = new Date(deadline);
-    const diffTime = deadlineDate - today;
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays;
-  };
+  // Função removida - não utilizada
+  // const getDaysRemaining = (deadline) => {
+  //   const today = new Date();
+  //   const deadlineDate = new Date(deadline);
+  //   const diffTime = deadlineDate - today;
+  //   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  //   return diffDays;
+  // };
 
   const getStatusColor = (status, percentage) => {
     if (status === 'completed') return 'text-green-600';

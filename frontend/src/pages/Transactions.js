@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useData } from '../contexts/DataContext';
 import { useToast } from '../contexts/ToastContext';
@@ -11,11 +11,9 @@ import {
   Trash2, 
   ArrowUpRight, 
   ArrowDownRight, 
-  Calendar,
   CreditCard,
   Filter,
-  Download,
-  Upload
+  Download
 } from 'lucide-react';
 
 const Transactions = () => {
@@ -33,7 +31,7 @@ const Transactions = () => {
     endDate: ''
   });
 
-  const { register, handleSubmit, formState: { errors }, reset, setValue, watch } = useForm({
+  const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm({
     defaultValues: {
       type: '',
       amount: '',
