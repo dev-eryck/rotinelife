@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.svg" type="image/svg+xml" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0ea5e9" />
+    <meta name="description" content="RotineLife - Organizador Financeiro Pessoal. Controle suas receitas, despesas, orçamentos e metas financeiras de forma simples e eficiente." />
+    <meta name="keywords" content="finanças pessoais, organizador financeiro, controle de gastos, orçamento, metas financeiras" />
+    <meta name="author" content="ErycK" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://rotinelife.com/" />
+    <meta property="og:title" content="RotineLife - Organizador Financeiro" />
+    <meta property="og:description" content="Controle suas finanças pessoais de forma simples e eficiente" />
+    <meta property="og:image" content="%PUBLIC_URL%/og-image.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://rotinelife.com/" />
+    <meta property="twitter:title" content="RotineLife - Organizador Financeiro" />
+    <meta property="twitter:description" content="Controle suas finanças pessoais de forma simples e eficiente" />
+    <meta property="twitter:image" content="%PUBLIC_URL%/og-image.png" />
+
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/favicon.svg" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <title>RotineLife - Organizador Financeiro</title>
+    
+    <!-- Environment Configuration -->
+    <script src="%PUBLIC_URL%/env.js"></script>
+  </head>
+  <body>
+    <noscript>
+      <div style="text-align: center; padding: 2rem; font-family: Arial, sans-serif;">
+        <h1>JavaScript Necessário</h1>
+        <p>Você precisa habilitar o JavaScript para executar este aplicativo.</p>
+        <p>Por favor, ative o JavaScript no seu navegador e recarregue a página.</p>
+      </div>
+    </noscript>
+    <div id="root"></div>
+    
+    <!-- Loading fallback -->
+    <div id="loading-fallback" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f9fafb; display: flex; align-items: center; justify-content: center; font-family: Inter, sans-serif;">
+      <div style="text-align: center;">
+        <div style="width: 40px; height: 40px; border: 4px solid #e5e7eb; border-top: 4px solid #0ea5e9; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
+        <p style="color: #6b7280; font-size: 14px;">Carregando RotineLife...</p>
+      </div>
+    </div>
+    
+    <style>
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      /* Hide loading fallback when React loads */
+      #root:not(:empty) + #loading-fallback {
+        display: none !important;
+      }
+    </style>
+  </body>
+</html>
