@@ -2,6 +2,28 @@
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.1.3] - 2024-01-XX - Correção Final: Netlify Build Path
+
+### 🚨 **Correção Final do Deploy**
+- **netlify.toml movido** de volta para raiz do projeto
+- **Base path configurado** corretamente: `base = "frontend"`
+- **Publish path explícito**: `publish = "frontend/build"`
+- **index.html encontrado** em `frontend/public/` durante build
+- **Build final** gerado em `frontend/build/` para deploy
+
+### 🔧 **Configuração Final**
+```toml
+[build]
+  base = "frontend"
+  publish = "frontend/build"
+  command = "npm ci --silent && npm run build"
+```
+
+### ✅ **Status**
+- **Build local**: ✅ Funcionando perfeitamente
+- **index.html**: ✅ Encontrado em public/ e gerado em build/
+- **Deploy**: ✅ Pronto para Netlify
+
 ## [1.1.2] - 2024-01-XX - Correção Crítica: Path do Netlify
 
 ### 🚨 **Correção Crítica do Deploy**
