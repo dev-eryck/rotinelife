@@ -2,6 +2,24 @@
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.1.7] - 2024-01-XX - Correção Crítica: Arquivos Public
+
+### 🚨 **Correção Crítica do Deploy**
+- **Arquivos public/ adicionados** ao repositório Git
+- **index.html encontrado** - estava sendo ignorado pelo .gitignore
+- **Pasta public/ ignorada** - linha `public` no .gitignore removida
+- **Build deve funcionar** agora com todos os arquivos necessários
+
+### 🔧 **Problema Identificado**
+- **index.html não estava** no repositório (ignorado pelo .gitignore)
+- **Netlify procurava** `/opt/build/repo/frontend/public/index.html` mas não encontrava
+- **Arquivos public/** essenciais para React apps não estavam sendo enviados
+
+### ✅ **Status Crítico**
+- **Arquivos adicionados**: ✅ frontend/public/index.html
+- **Gitignore corrigido**: ✅ Pasta public/ não mais ignorada
+- **Deploy**: ✅ Deve funcionar agora
+
 ## [1.1.6] - 2024-01-XX - Correção Definitiva: Base Path
 
 ### 🚨 **Correção Definitiva do Deploy**
