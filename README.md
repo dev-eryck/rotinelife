@@ -249,47 +249,105 @@ rotine-life/
 
 ## 🚀 Deploy
 
-### **Frontend (Netlify)**
-1. **Opção 1 - Via GitHub (Recomendado):**
-   - Faça push do código para GitHub
-   - Conecte o repositório ao Netlify
-   - Configure: Build command: `cd frontend && npm run build`
-   - Configure: Publish directory: `frontend/build`
+### **Frontend (Netlify) - Configuração Otimizada**
 
-2. **Opção 2 - Via Netlify CLI:**
-   ```bash
-   npm install -g netlify-cli
-   netlify login
-   cd frontend
-   npm run build
-   netlify deploy --prod --dir=build
-   ```
+#### **1. Preparação do Código**
+```bash
+# Instalar dependências
+cd frontend
+npm install
 
-### **Backend (Render)**
+# Testar build localmente
+npm run build
+
+# Verificar se não há erros
+npm run lint
+```
+
+#### **2. Configuração do Netlify**
+O projeto já inclui `netlify.toml` otimizado:
+
+```toml
+[build]
+  base = "frontend"
+  publish = "build"
+  command = "npm ci --silent && npm run build"
+
+[build.environment]
+  NODE_VERSION = "18.20.8"
+  NPM_FLAGS = "--silent"
+```
+
+#### **3. Deploy Automático**
+1. **Conecte ao GitHub:**
+   - Acesse [Netlify](https://netlify.com)
+   - Clique em "New site from Git"
+   - Conecte seu repositório GitHub
+   - O Netlify detectará automaticamente as configurações
+
+2. **Configurações Recomendadas:**
+   - **Build command**: `npm ci --silent && npm run build`
+   - **Publish directory**: `build`
+   - **Node version**: `18.20.8`
+
+#### **4. Variáveis de Ambiente (Opcional)**
+Se usar backend externo, adicione no Netlify:
+- `REACT_APP_API_BASE_URL`: `https://seu-backend.onrender.com`
+
+### **Backend (Render) - Configuração Completa**
+
+#### **1. Preparação**
+```bash
+cd backend
+npm install
+```
+
+#### **2. Configuração no Render**
 1. Conecte seu repositório ao Render
 2. Configure:
-   - Build Command: `cd backend && npm install`
-   - Start Command: `cd backend && npm start`
-   - Node Version: `18`
-3. Adicione variáveis de ambiente:
-   - `NODE_ENV`: `production`
-   - `JWT_SECRET`: `sua_chave_secreta`
-   - `MONGODB_URI`: `sua_string_mongodb` (opcional)
+   - **Build Command**: `cd backend && npm install`
+   - **Start Command**: `cd backend && npm start`
+   - **Node Version**: `18`
+
+#### **3. Variáveis de Ambiente**
+```
+NODE_ENV=production
+JWT_SECRET=sua_chave_secreta_super_segura
+MONGODB_URI=mongodb+srv://usuario:senha@cluster.mongodb.net/rotinelife
+PORT=5000
+```
 
 ### **📱 Acesso Mobile**
-Após o deploy, acesse de qualquer dispositivo:
 - **URL**: `https://seu-site.netlify.app`
-- **PWA**: Adicione à tela inicial do celular
-- **Responsivo**: Funciona em desktop, tablet e mobile
+- **PWA**: Funciona offline após primeiro acesso
+- **Responsivo**: Otimizado para mobile
 
-### **🔄 Atualizações**
+### **🔄 Atualizações Automáticas**
 - **Frontend**: Push para GitHub → Deploy automático no Netlify
 - **Backend**: Push para GitHub → Deploy automático no Render
 
-### **Banco de Dados (MongoDB Atlas)**
-1. Crie um cluster gratuito
-2. Configure acesso e usuários
-3. Atualize `MONGODB_URI` no .env
+### **🛠️ Troubleshooting**
+
+#### **Erros Comuns no Netlify:**
+1. **Build falha**: Verifique se `npm run build` funciona localmente
+2. **Node version**: Use Node.js 18.20.8 (especificado no netlify.toml)
+3. **Dependências**: Use `npm ci` em vez de `npm install`
+
+#### **Logs de Debug:**
+```bash
+# Testar build local
+cd frontend
+npm run lint
+npm run build
+
+# Verificar tamanho do bundle
+ls -la build/static/js/
+```
+
+#### **Performance:**
+- Bundle otimizado: ~97KB gzipped
+- Build time: ~2-3 minutos
+- Deploy time: ~1-2 minutos
 
 ## 🤝 Contribuição
 
