@@ -2,6 +2,20 @@
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.1.1] - 2024-01-XX - Correção Crítica: Versão Node.js
+
+### 🚨 **Correção Crítica**
+- **Versão Node.js corrigida** no `.nvmrc`: `20` → `18.20.8`
+- **Conflito resolvido** entre `.nvmrc` e `netlify.toml`
+- **Build error eliminado**: "Build script returned non-zero exit code: 2"
+- **Compatibilidade garantida** com Netlify
+
+### 🔧 **Detalhes Técnicos**
+- **Problema**: `.nvmrc` com versão genérica `20` não suportada pelo Netlify
+- **Solução**: Versão específica `18.20.8` alinhada com `netlify.toml`
+- **Teste**: Build local funcionando perfeitamente
+- **Deploy**: Agora compatível com Netlify
+
 ## [1.1.0] - 2024-01-XX - Refatoração Completa para Deploy
 
 ### ✨ **Novidades**
