@@ -1,36 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Plus, Edit, Trash2, Tag } from 'lucide-react';
-import axios from 'axios';
+import { useData } from '../contexts/DataContext';
+import { useToast } from '../contexts/ToastContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const Categories = () => {
-  const [loading, setLoading] = useState(true);
-  const [categories, setCategories] = useState([]);
+  const { success, error } = useToast();
+  const { categories, dispatch } = useData();
+  const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState('all');
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const fetchCategories = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get('/api/categories');
-      setCategories(response.data);
-    } catch (error) {
-      // console.error('Erro ao carregar categorias:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleDelete = async (id) => {
     if (window.confirm('Tem certeza que deseja deletar esta categoria?')) {
       try {
-        await axios.delete(`/api/categories/${id}`);
-        fetchCategories();
-      } catch (error) {
-        // console.error('Erro ao deletar categoria:', error);
+        setLoading(true);
+        
+        // Simular exclusão
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Remover categoria do contexto
+        dispatch({ type: 'DELETE_CATEGORY', payload: id });
+        success('Categoria excluída com sucesso!');
+      } catch (err) {
+        error('Erro ao excluir categoria');
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -39,6 +33,14 @@ const Categories = () => {
     if (filter === 'all') return true;
     return category.type === filter;
   });
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-96">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

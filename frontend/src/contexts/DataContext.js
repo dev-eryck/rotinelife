@@ -31,6 +31,12 @@ const dataReducer = (state, action) => {
     case 'SET_CATEGORIES':
       return { ...state, categories: action.payload };
     
+    case 'DELETE_CATEGORY':
+      return {
+        ...state,
+        categories: state.categories.filter(c => c._id !== action.payload)
+      };
+    
     case 'SET_BUDGETS':
       return { ...state, budgets: action.payload };
     
