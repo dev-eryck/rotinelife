@@ -64,9 +64,9 @@ router.post('/register', async (req, res) => {
 
     // Criar hash da senha
     console.log('Criando hash da senha...');
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(12);
     const hashedPassword = await bcrypt.hash(password, salt);
-    console.log('Hash criado com sucesso');
+    console.log('Hash criado com sucesso:', hashedPassword);
 
     // Criar usuário
     console.log('Criando usuário...');
@@ -171,9 +171,14 @@ router.post('/login', async (req, res) => {
       console.log('Erro: Senha incorreta');
       // Vamos testar se o problema é no hash
       console.log('Testando hash da senha recebida...');
-      const testHash = await bcrypt.hash(password, 10);
+      const testHash = await bcrypt.hash(password, 12);
       const testMatch = await bcrypt.compare(password, testHash);
       console.log('Teste de hash funcionou:', testMatch);
+      
+      // Vamos testar se conseguimos comparar com o hash armazenado
+      console.log('Testando comparação direta...');
+      const directMatch = await bcrypt.compare(password, user.password);
+      console.log('Comparação direta funcionou:', directMatch);
       
       return res.status(400).json({
         message: 'Credenciais inválidas'
