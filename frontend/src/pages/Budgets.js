@@ -39,7 +39,7 @@ const Budgets = () => {
   const handleEditBudget = (budget) => {
     setEditingBudget(budget);
     setValue('category', budget.category._id);
-    setValue('limit', budget.limit);
+    setValue('limit', budget.amount);
     setValue('period', budget.period);
     setShowModal(true);
   };
@@ -273,7 +273,7 @@ const Budgets = () => {
                 <div className="mb-4">
                   <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
                     <span>Gasto: {formatCurrency(budget.spent)}</span>
-                    <span>Limite: {formatCurrency(budget.limit)}</span>
+                    <span>Limite: {formatCurrency(budget.amount)}</span>
                   </div>
                   <div className="progress-bar">
                     <div
@@ -297,7 +297,7 @@ const Budgets = () => {
                       {budget.percentage.toFixed(1)}% utilizado
                     </p>
                     <p className="text-sm font-medium text-gray-900">
-                      Restam {formatCurrency(budget.limit - budget.spent)}
+                      Restam {formatCurrency(budget.amount - budget.spent)}
                     </p>
                   </div>
                 </div>

@@ -231,7 +231,7 @@ const Dashboard = () => {
                     {budget.category.name}
                   </span>
                   <span className="text-sm text-gray-500">
-                    {formatCurrency(budget.spent)} / {formatCurrency(budget.limit)}
+                    {formatCurrency(budget.spent)} / {formatCurrency(budget.amount)}
                   </span>
                 </div>
                 <div className="progress-bar">
@@ -283,7 +283,7 @@ const Dashboard = () => {
                 <div className="mb-3">
                   <div className="flex items-center justify-between text-sm text-gray-600 mb-1">
                     <span>{formatCurrency(goal.current)}</span>
-                    <span>{formatCurrency(goal.target)}</span>
+                    <span>{formatCurrency(goal.targetAmount)}</span>
                   </div>
                   <div className="progress-bar">
                     <div
@@ -297,7 +297,7 @@ const Dashboard = () => {
                     {goal.percentage.toFixed(1)}% concluído
                   </span>
                   <span className="text-sm text-gray-500">
-                    Faltam {formatCurrency(goal.target - goal.current)}
+                    Faltam {formatCurrency(goal.targetAmount - goal.current)}
                   </span>
                 </div>
               </div>

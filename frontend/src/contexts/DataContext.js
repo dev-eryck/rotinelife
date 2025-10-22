@@ -222,7 +222,7 @@ export const DataProvider = ({ children }) => {
         })
         .reduce((sum, t) => sum + Math.abs(t.amount), 0);
       
-      const percentage = budget.limit > 0 ? (spent / budget.limit) * 100 : 0;
+      const percentage = budget.amount > 0 ? (spent / budget.amount) * 100 : 0;
       
       return {
         ...budget,

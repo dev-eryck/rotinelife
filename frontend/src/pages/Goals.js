@@ -43,7 +43,7 @@ const Goals = () => {
     setEditingGoal(goal);
     setValue('title', goal.title);
     setValue('description', goal.description);
-    setValue('target', goal.target);
+    setValue('target', goal.targetAmount);
     setValue('deadline', new Date(goal.deadline).toISOString().split('T')[0]);
     setShowModal(true);
   };
@@ -314,7 +314,7 @@ const Goals = () => {
                   <div className="mb-4">
                     <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
                       <span>{formatCurrency(goal.current)}</span>
-                      <span>{formatCurrency(goal.target)}</span>
+                      <span>{formatCurrency(goal.targetAmount)}</span>
                     </div>
                     <div className="progress-bar">
                       <div
@@ -338,7 +338,7 @@ const Goals = () => {
                         Prazo: {formatDate(goal.deadline)}
                       </p>
                       <p className="text-sm font-medium text-gray-900">
-                        Faltam {formatCurrency(goal.target - goal.current)}
+                        Faltam {formatCurrency(goal.targetAmount - goal.current)}
                       </p>
                     </div>
                   </div>
@@ -393,7 +393,7 @@ const Goals = () => {
                         Concluída em {formatDate(goal.updatedAt)}
                       </p>
                       <p className="text-sm font-medium text-gray-900">
-                        Valor: {formatCurrency(goal.target)}
+                        Valor: {formatCurrency(goal.targetAmount)}
                       </p>
                     </div>
                   </div>
