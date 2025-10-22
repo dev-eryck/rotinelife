@@ -155,16 +155,16 @@ export const DataProvider = ({ children }) => {
   const calculateStats = () => {
     const totalIncome = state.transactions
       .filter(t => t.type === 'income')
-      .reduce((sum, t) => sum + t.amount, 0);
+      .reduce((sum, t) => sum + (t.amount || 0), 0);
     
     const totalExpense = state.transactions
       .filter(t => t.type === 'expense')
-      .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+      .reduce((sum, t) => sum + Math.abs(t.amount || 0), 0);
     
     // Calcular dinheiro reservado em metas ativas
     const totalReservedInGoals = state.goals
       .filter(g => g.status === 'active')
-      .reduce((sum, g) => sum + g.current, 0);
+      .reduce((sum, g) => sum + (g.currentAmount || 0), 0);
     
     // Saldo disponível = Receitas - Despesas - Dinheiro reservado em metas
     const availableBalance = totalIncome - totalExpense - totalReservedInGoals;
@@ -180,7 +180,7 @@ export const DataProvider = ({ children }) => {
                transactionDate.getMonth() === currentMonth && 
                transactionDate.getFullYear() === currentYear;
       })
-      .reduce((sum, t) => sum + t.amount, 0);
+      .reduce((sum, t) => sum + (t.amount || 0), 0);
     
     const monthlyExpense = state.transactions
       .filter(t => {
@@ -189,7 +189,7 @@ export const DataProvider = ({ children }) => {
                transactionDate.getMonth() === currentMonth && 
                transactionDate.getFullYear() === currentYear;
       })
-      .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+      .reduce((sum, t) => sum + Math.abs(t.amount || 0), 0);
     
     const monthlyBalance = monthlyIncome - monthlyExpense;
     
