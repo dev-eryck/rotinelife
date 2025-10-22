@@ -33,8 +33,10 @@ router.post('/register', [
     .withMessage('Senha deve ter no mínimo 6 caracteres')
 ], async (req, res) => {
   try {
+    console.log('Registro - Dados recebidos:', req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('Erros de validação:', errors.array());
       return res.status(400).json({
         message: 'Dados inválidos',
         errors: errors.array()
@@ -118,8 +120,10 @@ router.post('/login', [
     .withMessage('Senha é obrigatória')
 ], async (req, res) => {
   try {
+    console.log('Login - Dados recebidos:', req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('Erros de validação:', errors.array());
       return res.status(400).json({
         message: 'Dados inválidos',
         errors: errors.array()
