@@ -102,7 +102,19 @@ const Transactions = () => {
     try {
       setLoading(true);
       
+      console.log('📊 Dados recebidos:', data);
+      console.log('📊 Categorias disponíveis:', categories);
+      console.log('📊 Categoria selecionada ID:', data.category);
+      
       const category = categories.find(c => c._id === data.category);
+      console.log('📊 Categoria encontrada:', category);
+      
+      if (!category) {
+        error('Categoria não encontrada! Verifique se a categoria foi selecionada corretamente.');
+        setLoading(false);
+        return;
+      }
+      
       const amount = data.type === 'income' ? parseFloat(data.amount) : -parseFloat(data.amount);
       
       // Verificar se é uma despesa e se há saldo suficiente

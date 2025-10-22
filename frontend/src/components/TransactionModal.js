@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { X, Calendar, Tag, DollarSign, FileText } from 'lucide-react';
-import axios from 'axios';
-import toast from 'react-hot-toast';
 import LoadingSpinner from './LoadingSpinner';
 
 const TransactionModal = ({ transaction, categories, onClose, onSave }) => {
@@ -49,18 +47,10 @@ const TransactionModal = ({ transaction, categories, onClose, onSave }) => {
         tags: data.tags ? data.tags.split(',').map(tag => tag.trim()).filter(tag => tag) : []
       };
 
-      if (transaction) {
-        await axios.put(`/api/transactions/${transaction._id}`, transactionData);
-        toast.success('Transação atualizada com sucesso!');
-      } else {
-        await axios.post('/api/transactions', transactionData);
-        toast.success('Transação criada com sucesso!');
-      }
-
-      onSave();
+      // Usar a função onSave do componente pai (que usa DataContext)
+      await onSave(transactionData, transaction);
     } catch (error) {
-      const message = error.response?.data?.message || 'Erro ao salvar transação';
-      toast.error(message);
+      // O erro já é tratado no componente pai
     } finally {
       setLoading(false);
     }
