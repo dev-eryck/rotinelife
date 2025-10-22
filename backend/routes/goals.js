@@ -13,7 +13,20 @@ router.get('/', auth, async (req, res) => {
     const goals = await Goal.find({ user: req.user._id })
       .sort({ createdAt: -1 });
 
-    res.json(goals);
+    // Calcular progresso para cada meta
+    const goalsWithProgress = goals.map(goal => {
+      const progress = goal.calculateProgress();
+      return {
+        ...goal.toObject(),
+        percentage: progress.percentage,
+        remaining: progress.remaining,
+        daysRemaining: progress.daysRemaining,
+        isCompleted: progress.isCompleted,
+        isOverdue: progress.isOverdue
+      };
+    });
+
+    res.json(goalsWithProgress);
   } catch (error) {
     console.error('Erro ao buscar metas:', error);
     res.status(500).json({ message: 'Erro interno do servidor' });

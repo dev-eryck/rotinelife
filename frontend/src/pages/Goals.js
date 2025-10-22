@@ -319,7 +319,7 @@ const Goals = () => {
                     <div className="progress-bar">
                       <div
                         className="progress-fill progress-fill-safe"
-                        style={{ width: `${goal.percentage}%` }}
+                        style={{ width: `${goal.percentage || 0}%` }}
                       />
                     </div>
                   </div>
@@ -330,7 +330,7 @@ const Goals = () => {
                         {getStatusText(goal.status, goal.percentage)}
                       </span>
                       <span className="text-sm text-gray-500 ml-2">
-                        ({goal.percentage.toFixed(1)}%)
+                        ({(goal.percentage || 0).toFixed(1)}%)
                       </span>
                     </div>
                     <div className="text-right">
