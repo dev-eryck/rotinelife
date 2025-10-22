@@ -102,18 +102,9 @@ const Transactions = () => {
     try {
       setLoading(true);
       
-      console.log('🔍 DEBUG - Dados do formulário:', data);
-      console.log('🔍 DEBUG - Categorias disponíveis:', categories);
-      console.log('🔍 DEBUG - Categoria selecionada ID:', data.category);
-      console.log('🔍 DEBUG - Tipo de categoria selecionada:', typeof data.category);
-      
       const category = categories.find(c => c._id === data.category);
-      console.log('🔍 DEBUG - Categoria encontrada:', category);
       
       if (!category) {
-        console.error('❌ ERRO - Categoria não encontrada!');
-        console.error('❌ ERRO - ID procurado:', data.category);
-        console.error('❌ ERRO - IDs disponíveis:', categories.map(c => c._id));
         error('Categoria não encontrada! Verifique se a categoria foi selecionada corretamente.');
         setLoading(false);
         return;
