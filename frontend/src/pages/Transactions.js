@@ -12,7 +12,6 @@ import {
   ArrowUpRight, 
   ArrowDownRight, 
   CreditCard,
-  Filter,
   Download
 } from 'lucide-react';
 
