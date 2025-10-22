@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-// import { useAuth } from './AuthContext'; // Removido - não utilizado
+import { useAuth } from './AuthContext';
+import { API_ENDPOINTS } from '../config/api';
+import axios from 'axios';
 
 const DataContext = createContext();
 
@@ -101,7 +103,52 @@ const initialState = {
 
 export const DataProvider = ({ children }) => {
   const [state, dispatch] = useReducer(dataReducer, initialState);
-  // const { user } = useAuth(); // Removido - não utilizado
+  const { user, token } = useAuth();
+
+  // Carregar dados do backend quando o usuário fizer login
+  useEffect(() => {
+    if (user && token) {
+      loadData();
+    } else {
+      // Limpar dados quando usuário sair
+      dispatch({ type: 'RESET_DATA' });
+    }
+  }, [user, token]);
+
+  const loadData = async () => {
+    try {
+      dispatch({ type: 'SET_LOADING', payload: true });
+      
+      // Carregar transações
+      const transactionsResponse = await axios.get(API_ENDPOINTS.TRANSACTIONS, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      dispatch({ type: 'SET_TRANSACTIONS', payload: transactionsResponse.data.transactions });
+
+      // Carregar categorias
+      const categoriesResponse = await axios.get(API_ENDPOINTS.CATEGORIES, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      dispatch({ type: 'SET_CATEGORIES', payload: categoriesResponse.data });
+
+      // Carregar orçamentos
+      const budgetsResponse = await axios.get(API_ENDPOINTS.BUDGETS, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      dispatch({ type: 'SET_BUDGETS', payload: budgetsResponse.data });
+
+      // Carregar metas
+      const goalsResponse = await axios.get(API_ENDPOINTS.GOALS, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      dispatch({ type: 'SET_GOALS', payload: goalsResponse.data });
+
+    } catch (error) {
+      console.error('Erro ao carregar dados:', error);
+    } finally {
+      dispatch({ type: 'SET_LOADING', payload: false });
+    }
+  };
 
   // Calcular estatísticas
   const calculateStats = () => {

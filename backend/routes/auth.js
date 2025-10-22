@@ -130,33 +130,46 @@ router.post('/login', async (req, res) => {
     // Validação manual simples
     const { email, password } = req.body;
     
+    console.log('Validando email:', email);
     if (!email || !email.includes('@')) {
+      console.log('Erro: Email inválido');
       return res.status(400).json({
         message: 'Email inválido'
       });
     }
     
+    console.log('Validando senha:', password);
     if (!password) {
+      console.log('Erro: Senha obrigatória');
       return res.status(400).json({
         message: 'Senha é obrigatória'
       });
     }
+    
+    console.log('Validação passou, buscando usuário...');
 
     // Buscar usuário
     const user = await User.findOne({ email }).select('+password');
+    console.log('Usuário encontrado:', user ? 'Sim' : 'Não');
     if (!user) {
+      console.log('Erro: Usuário não encontrado');
       return res.status(400).json({
         message: 'Credenciais inválidas'
       });
     }
 
     // Verificar senha
+    console.log('Verificando senha...');
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log('Senha correta:', isMatch);
     if (!isMatch) {
+      console.log('Erro: Senha incorreta');
       return res.status(400).json({
         message: 'Credenciais inválidas'
       });
     }
+    
+    console.log('Login bem-sucedido!');
 
     // Atualizar último login
     user.lastLogin = new Date();
