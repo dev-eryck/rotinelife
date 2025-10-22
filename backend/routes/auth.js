@@ -1,5 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
 const Category = require('../models/Category');
@@ -42,25 +43,59 @@ router.post('/register', [
 
     const { name, email, password } = req.body;
 
-    // Modo demo - simular criação de usuário
-    const user = {
-      id: 'demo-user-' + Date.now(),
+    // Verificar se usuário já existe
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({
+        message: 'Usuário já existe com este email'
+      });
+    }
+
+    // Criar hash da senha
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // Criar usuário
+    const user = new User({
       name,
       email,
+      password: hashedPassword,
       preferences: {
         currency: 'BRL',
         language: 'pt-BR',
         theme: 'light'
       }
-    };
+    });
+
+    await user.save();
+
+    // Criar categorias padrão para o usuário
+    const defaultCategories = [
+      { name: 'Alimentação', type: 'expense', color: '#FF6B6B', userId: user._id },
+      { name: 'Transporte', type: 'expense', color: '#4ECDC4', userId: user._id },
+      { name: 'Lazer', type: 'expense', color: '#45B7D1', userId: user._id },
+      { name: 'Saúde', type: 'expense', color: '#96CEB4', userId: user._id },
+      { name: 'Educação', type: 'expense', color: '#FFEAA7', userId: user._id },
+      { name: 'Salário', type: 'income', color: '#6C5CE7', userId: user._id },
+      { name: 'Freelance', type: 'income', color: '#A29BFE', userId: user._id },
+      { name: 'Investimentos', type: 'income', color: '#FD79A8', userId: user._id }
+    ];
+
+    await Category.insertMany(defaultCategories);
 
     // Gerar token
-    const token = generateToken(user.id);
+    const token = generateToken(user._id);
 
     res.status(201).json({
-      message: 'Usuário criado com sucesso (modo demo)',
+      message: 'Usuário criado com sucesso',
       token,
-      user
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        preferences: user.preferences,
+        createdAt: user.createdAt
+      }
     });
   } catch (error) {
     console.error('Erro no registro:', error);
@@ -93,26 +128,40 @@ router.post('/login', [
 
     const { email, password } = req.body;
 
-    // Modo demo - aceitar qualquer email/senha
-    const user = {
-      id: 'demo-user-' + Date.now(),
-      name: email.split('@')[0],
-      email,
-      preferences: {
-        currency: 'BRL',
-        language: 'pt-BR',
-        theme: 'light'
-      },
-      lastLogin: new Date()
-    };
+    // Buscar usuário
+    const user = await User.findOne({ email }).select('+password');
+    if (!user) {
+      return res.status(400).json({
+        message: 'Credenciais inválidas'
+      });
+    }
+
+    // Verificar senha
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({
+        message: 'Credenciais inválidas'
+      });
+    }
+
+    // Atualizar último login
+    user.lastLogin = new Date();
+    await user.save();
 
     // Gerar token
-    const token = generateToken(user.id);
+    const token = generateToken(user._id);
 
     res.json({
-      message: 'Login realizado com sucesso (modo demo)',
+      message: 'Login realizado com sucesso',
       token,
-      user
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        preferences: user.preferences,
+        lastLogin: user.lastLogin,
+        createdAt: user.createdAt
+      }
     });
   } catch (error) {
     console.error('Erro no login:', error);

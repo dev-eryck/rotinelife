@@ -22,33 +22,17 @@ router.get('/', [
       });
     }
 
-    // Modo demo - categorias simuladas
-    const demoCategories = [
-      // Receitas
-      { _id: 'cat-1', name: 'Salário', type: 'income', icon: '💰', color: '#4CAF50', isDefault: true },
-      { _id: 'cat-2', name: 'Freelance', type: 'income', icon: '💼', color: '#2196F3', isDefault: true },
-      { _id: 'cat-3', name: 'Investimentos', type: 'income', icon: '📈', color: '#FF9800', isDefault: true },
-      { _id: 'cat-4', name: 'Outros', type: 'income', icon: '💵', color: '#9C27B0', isDefault: true },
-      
-      // Despesas
-      { _id: 'cat-5', name: 'Alimentação', type: 'expense', icon: '🍽️', color: '#F44336', isDefault: true },
-      { _id: 'cat-6', name: 'Transporte', type: 'expense', icon: '🚗', color: '#607D8B', isDefault: true },
-      { _id: 'cat-7', name: 'Moradia', type: 'expense', icon: '🏠', color: '#795548', isDefault: true },
-      { _id: 'cat-8', name: 'Saúde', type: 'expense', icon: '🏥', color: '#E91E63', isDefault: true },
-      { _id: 'cat-9', name: 'Educação', type: 'expense', icon: '📚', color: '#3F51B5', isDefault: true },
-      { _id: 'cat-10', name: 'Lazer', type: 'expense', icon: '🎬', color: '#9C27B0', isDefault: true },
-      { _id: 'cat-11', name: 'Roupas', type: 'expense', icon: '👕', color: '#FF5722', isDefault: true },
-      { _id: 'cat-12', name: 'Outros', type: 'expense', icon: '📁', color: '#808080', isDefault: true }
-    ];
-
     const { type } = req.query;
-    let filteredCategories = demoCategories;
     
-    if (type) {
-      filteredCategories = demoCategories.filter(cat => cat.type === type);
-    }
+    // Construir filtros
+    const filters = { userId: req.user._id };
+    if (type) filters.type = type;
 
-    res.json(filteredCategories);
+    // Buscar categorias
+    const categories = await Category.find(filters)
+      .sort({ sortOrder: 1, name: 1 });
+
+    res.json(categories);
   } catch (error) {
     console.error('Erro ao buscar categorias:', error);
     res.status(500).json({
@@ -92,9 +76,8 @@ router.post('/', [
     // Verificar se já existe categoria com mesmo nome
     const existingCategory = await Category.findOne({
       name: { $regex: new RegExp(`^${name}$`, 'i') },
-      user: req.user._id,
-      type,
-      isActive: true
+      userId: req.user._id,
+      type
     });
 
     if (existingCategory) {
@@ -105,15 +88,14 @@ router.post('/', [
 
     // Obter próximo sortOrder
     const lastCategory = await Category.findOne({
-      user: req.user._id,
-      type,
-      isActive: true
+      userId: req.user._id,
+      type
     }).sort({ sortOrder: -1 });
 
     const sortOrder = lastCategory ? lastCategory.sortOrder + 1 : 0;
 
     const category = new Category({
-      user: req.user._id,
+      userId: req.user._id,
       name,
       type,
       icon,
@@ -165,8 +147,7 @@ router.put('/:id', [
 
     const category = await Category.findOne({
       _id: req.params.id,
-      user: req.user._id,
-      isActive: true
+      userId: req.user._id
     });
 
     if (!category) {
@@ -181,9 +162,8 @@ router.put('/:id', [
     if (name && name !== category.name) {
       const existingCategory = await Category.findOne({
         name: { $regex: new RegExp(`^${name}$`, 'i') },
-        user: req.user._id,
+        userId: req.user._id,
         type: category.type,
-        isActive: true,
         _id: { $ne: category._id }
       });
 
@@ -220,8 +200,7 @@ router.delete('/:id', auth, async (req, res) => {
   try {
     const category = await Category.findOne({
       _id: req.params.id,
-      user: req.user._id,
-      isActive: true
+      userId: req.user._id
     });
 
     if (!category) {
@@ -230,18 +209,10 @@ router.delete('/:id', auth, async (req, res) => {
       });
     }
 
-    // Verificar se é categoria padrão
-    if (category.isDefault) {
-      return res.status(400).json({
-        message: 'Não é possível deletar categorias padrão'
-      });
-    }
-
     // Verificar se há transações usando esta categoria
     const transactionCount = await Transaction.countDocuments({
       category: category._id,
-      user: req.user._id,
-      isActive: true
+      userId: req.user._id
     });
 
     if (transactionCount > 0) {
@@ -250,9 +221,8 @@ router.delete('/:id', auth, async (req, res) => {
       });
     }
 
-    // Soft delete
-    category.isActive = false;
-    await category.save();
+    // Deletar categoria
+    await Category.findByIdAndDelete(category._id);
 
     res.json({
       message: 'Categoria deletada com sucesso'
