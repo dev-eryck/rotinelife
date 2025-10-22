@@ -119,6 +119,7 @@ export const DataProvider = ({ children }) => {
       const categoriesResponse = await axios.get(API_ENDPOINTS.CATEGORIES, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      console.log('🔍 DEBUG - Categorias carregadas do backend:', categoriesResponse.data);
       dispatch({ type: 'SET_CATEGORIES', payload: categoriesResponse.data });
 
       // Carregar orçamentos
