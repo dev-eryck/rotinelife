@@ -84,19 +84,21 @@ const Budgets = () => {
         dispatch({ type: 'UPDATE_BUDGET', payload: updatedBudget });
         success('Orçamento atualizado com sucesso!');
       } else {
-        // Novo orçamento
-        const newBudget = {
-          _id: 'budget-' + Date.now(),
-          ...data,
+        // Novo orçamento via backend
+        const budgetData = {
+          category: data.category,
           limit: parseFloat(data.limit) || 0,
-          category,
-          spent: 0,
-          percentage: 0,
-          createdAt: new Date()
+          description: data.description || ''
         };
         
-        dispatch({ type: 'ADD_BUDGET', payload: newBudget });
-        success('Orçamento criado com sucesso!');
+        const result = await addBudget(budgetData);
+        if (result.success) {
+          success('Orçamento criado com sucesso!');
+        } else {
+          error(result.error || 'Erro ao adicionar orçamento');
+          setLoading(false);
+          return;
+        }
       }
       
       setShowModal(false);

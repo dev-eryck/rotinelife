@@ -76,9 +76,6 @@ const Goals = () => {
     try {
       setLoading(true);
       
-      // Simular salvamento
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
       if (editingGoal) {
         // Editar meta
         const updatedGoal = {
@@ -91,19 +88,22 @@ const Goals = () => {
         dispatch({ type: 'UPDATE_GOAL', payload: updatedGoal });
         success('Meta atualizada com sucesso!');
       } else {
-        // Nova meta
-        const newGoal = {
-          _id: 'goal-' + Date.now(),
-          ...data,
+        // Nova meta via backend
+        const goalData = {
+          name: data.name,
           target: parseFloat(data.target) || 0,
-          current: 0,
-          percentage: 0,
-          status: 'active',
-          createdAt: new Date()
+          description: data.description || '',
+          deadline: data.deadline || null
         };
         
-        dispatch({ type: 'ADD_GOAL', payload: newGoal });
-        success('Meta criada com sucesso!');
+        const result = await addGoal(goalData);
+        if (result.success) {
+          success('Meta criada com sucesso!');
+        } else {
+          error(result.error || 'Erro ao adicionar meta');
+          setLoading(false);
+          return;
+        }
       }
       
       setShowModal(false);

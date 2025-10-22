@@ -234,29 +234,55 @@ export const DataProvider = ({ children }) => {
   const budgetsWithSpending = calculateBudgetSpending();
   const stats = calculateStats();
 
-  // Carregar categorias padrão
-  useEffect(() => {
-    const defaultCategories = [
-      { _id: 'cat-1', name: 'Salário', type: 'income', icon: '💰', color: '#10B981' },
-      { _id: 'cat-2', name: 'Freelance', type: 'income', icon: '💼', color: '#3B82F6' },
-      { _id: 'cat-3', name: 'Investimentos', type: 'income', icon: '📈', color: '#F59E0B' },
-      { _id: 'cat-4', name: 'Outros', type: 'income', icon: '💵', color: '#8B5CF6' },
-      { _id: 'cat-5', name: 'Alimentação', type: 'expense', icon: '🍽️', color: '#EF4444' },
-      { _id: 'cat-6', name: 'Transporte', type: 'expense', icon: '🚗', color: '#6B7280' },
-      { _id: 'cat-7', name: 'Moradia', type: 'expense', icon: '🏠', color: '#92400E' },
-      { _id: 'cat-8', name: 'Saúde', type: 'expense', icon: '🏥', color: '#EC4899' },
-      { _id: 'cat-9', name: 'Educação', type: 'expense', icon: '📚', color: '#6366F1' },
-      { _id: 'cat-10', name: 'Lazer', type: 'expense', icon: '🎬', color: '#8B5CF6' }
-    ];
-    
-    dispatch({ type: 'SET_CATEGORIES', payload: defaultCategories });
-  }, [dispatch]);
+  // Funções para interagir com o backend
+  const addTransaction = async (transactionData) => {
+    try {
+      const response = await axios.post(API_ENDPOINTS.TRANSACTIONS, transactionData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      dispatch({ type: 'ADD_TRANSACTION', payload: response.data.transaction });
+      return { success: true };
+    } catch (error) {
+      console.error('Erro ao adicionar transação:', error);
+      return { success: false, error: error.response?.data?.message || 'Erro ao adicionar transação' };
+    }
+  };
+
+  const addBudget = async (budgetData) => {
+    try {
+      const response = await axios.post(API_ENDPOINTS.BUDGETS, budgetData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      dispatch({ type: 'ADD_BUDGET', payload: response.data.budget });
+      return { success: true };
+    } catch (error) {
+      console.error('Erro ao adicionar orçamento:', error);
+      return { success: false, error: error.response?.data?.message || 'Erro ao adicionar orçamento' };
+    }
+  };
+
+  const addGoal = async (goalData) => {
+    try {
+      const response = await axios.post(API_ENDPOINTS.GOALS, goalData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      dispatch({ type: 'ADD_GOAL', payload: response.data.goal });
+      return { success: true };
+    } catch (error) {
+      console.error('Erro ao adicionar meta:', error);
+      return { success: false, error: error.response?.data?.message || 'Erro ao adicionar meta' };
+    }
+  };
 
   const value = {
     ...state,
     budgets: budgetsWithSpending,
     stats,
-    dispatch
+    dispatch,
+    addTransaction,
+    addBudget,
+    addGoal,
+    loadData
   };
 
   return (

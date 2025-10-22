@@ -115,9 +115,6 @@ const Transactions = () => {
         }
       }
       
-      // Simular salvamento
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
       if (editingTransaction) {
         // Editar transação
         const updatedTransaction = {
@@ -131,17 +128,24 @@ const Transactions = () => {
         dispatch({ type: 'UPDATE_TRANSACTION', payload: updatedTransaction });
         success('Transação atualizada com sucesso!');
       } else {
-        // Nova transação
-        const newTransaction = {
-          _id: 'transaction-' + Date.now(),
-          ...data,
-          amount,
-          category,
-          createdAt: new Date()
+        // Nova transação via backend
+        const transactionData = {
+          type: data.type,
+          amount: Math.abs(parseFloat(data.amount)),
+          description: data.description,
+          category: data.category,
+          date: data.date,
+          paymentMethod: data.paymentMethod || 'other'
         };
         
-        dispatch({ type: 'ADD_TRANSACTION', payload: newTransaction });
-        success('Transação criada com sucesso!');
+        const result = await addTransaction(transactionData);
+        if (result.success) {
+          success('Transação criada com sucesso!');
+        } else {
+          error(result.error || 'Erro ao adicionar transação');
+          setLoading(false);
+          return;
+        }
       }
       
       setShowModal(false);
