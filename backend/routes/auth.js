@@ -19,31 +19,30 @@ const generateToken = (id) => {
 // @route   POST /api/auth/register
 // @desc    Registrar novo usuário
 // @access  Public
-router.post('/register', [
-  body('name')
-    .trim()
-    .isLength({ min: 2, max: 50 })
-    .withMessage('Nome deve ter entre 2 e 50 caracteres'),
-  body('email')
-    .isEmail()
-    .normalizeEmail()
-    .withMessage('Email inválido'),
-  body('password')
-    .isLength({ min: 6 })
-    .withMessage('Senha deve ter no mínimo 6 caracteres')
-], async (req, res) => {
+router.post('/register', async (req, res) => {
   try {
     console.log('Registro - Dados recebidos:', req.body);
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      console.log('Erros de validação:', errors.array());
+    
+    // Validação manual simples
+    const { name, email, password } = req.body;
+    
+    if (!name || name.length < 2) {
       return res.status(400).json({
-        message: 'Dados inválidos',
-        errors: errors.array()
+        message: 'Nome deve ter pelo menos 2 caracteres'
       });
     }
-
-    const { name, email, password } = req.body;
+    
+    if (!email || !email.includes('@')) {
+      return res.status(400).json({
+        message: 'Email inválido'
+      });
+    }
+    
+    if (!password || password.length < 6) {
+      return res.status(400).json({
+        message: 'Senha deve ter pelo menos 6 caracteres'
+      });
+    }
 
     // Verificar se usuário já existe
     const existingUser = await User.findOne({ email });
@@ -110,27 +109,24 @@ router.post('/register', [
 // @route   POST /api/auth/login
 // @desc    Fazer login
 // @access  Public
-router.post('/login', [
-  body('email')
-    .isEmail()
-    .normalizeEmail()
-    .withMessage('Email inválido'),
-  body('password')
-    .notEmpty()
-    .withMessage('Senha é obrigatória')
-], async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     console.log('Login - Dados recebidos:', req.body);
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      console.log('Erros de validação:', errors.array());
+    
+    // Validação manual simples
+    const { email, password } = req.body;
+    
+    if (!email || !email.includes('@')) {
       return res.status(400).json({
-        message: 'Dados inválidos',
-        errors: errors.array()
+        message: 'Email inválido'
       });
     }
-
-    const { email, password } = req.body;
+    
+    if (!password) {
+      return res.status(400).json({
+        message: 'Senha é obrigatória'
+      });
+    }
 
     // Buscar usuário
     const user = await User.findOne({ email }).select('+password');
