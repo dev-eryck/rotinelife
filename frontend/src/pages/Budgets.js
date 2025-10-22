@@ -15,7 +15,7 @@ import {
 
 const Budgets = () => {
   const { success, error } = useToast();
-  const { budgets, categories, dispatch } = useData();
+  const { budgets, categories, dispatch, addBudget } = useData();
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [editingBudget, setEditingBudget] = useState(null);

@@ -17,7 +17,7 @@ import {
 
 const Transactions = () => {
   const { success, error } = useToast();
-  const { transactions, categories, stats, dispatch } = useData();
+  const { transactions, categories, stats, dispatch, addTransaction } = useData();
   const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);

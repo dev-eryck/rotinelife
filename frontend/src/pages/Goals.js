@@ -15,7 +15,7 @@ import {
 
 const Goals = () => {
   const { success, error } = useToast();
-  const { goals, dispatch, stats } = useData();
+  const { goals, dispatch, stats, addGoal } = useData();
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [editingGoal, setEditingGoal] = useState(null);
