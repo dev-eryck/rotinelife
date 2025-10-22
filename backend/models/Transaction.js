@@ -15,7 +15,12 @@ const transactionSchema = new mongoose.Schema({
   amount: {
     type: Number,
     required: [true, 'Valor é obrigatório'],
-    min: [0.01, 'Valor deve ser maior que zero']
+    validate: {
+      validator: function(value) {
+        return Math.abs(value) >= 0.01;
+      },
+      message: 'Valor deve ser maior que zero'
+    }
   },
   description: {
     type: String,
