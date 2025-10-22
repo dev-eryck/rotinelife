@@ -100,8 +100,12 @@ router.post('/', [
   body('paymentMethod').optional().isIn(['cash', 'credit_card', 'debit_card', 'bank_transfer', 'pix', 'other']).withMessage('Método de pagamento inválido')
 ], async (req, res) => {
   try {
+    console.log('🔍 DEBUG - Dados recebidos:', req.body);
+    console.log('🔍 DEBUG - Usuário:', req.user._id);
+    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('❌ ERRO - Validação falhou:', errors.array());
       return res.status(400).json({
         message: 'Dados inválidos',
         errors: errors.array()
@@ -109,16 +113,21 @@ router.post('/', [
     }
 
     const { type, amount, description, category, date, paymentMethod } = req.body;
+    console.log('🔍 DEBUG - Dados extraídos:', { type, amount, description, category, date, paymentMethod });
 
     // Verificar se categoria existe e pertence ao usuário
+    console.log('🔍 DEBUG - Procurando categoria:', category, 'para usuário:', req.user._id);
     const categoryDoc = await Category.findOne({ _id: category, user: req.user._id });
+    console.log('🔍 DEBUG - Categoria encontrada:', categoryDoc);
     if (!categoryDoc) {
+      console.log('❌ ERRO - Categoria não encontrada');
       return res.status(400).json({
         message: 'Categoria não encontrada'
       });
     }
 
     // Criar transação
+    console.log('🔍 DEBUG - Criando transação...');
     const transaction = new Transaction({
       type,
       amount: type === 'expense' ? -Math.abs(amount) : Math.abs(amount),
@@ -128,9 +137,15 @@ router.post('/', [
       paymentMethod: paymentMethod || 'other',
       user: req.user._id
     });
+    console.log('🔍 DEBUG - Transação criada:', transaction);
 
+    console.log('🔍 DEBUG - Salvando transação...');
     await transaction.save();
+    console.log('🔍 DEBUG - Transação salva com sucesso');
+    
+    console.log('🔍 DEBUG - Populando categoria...');
     await transaction.populate('category', 'name color type');
+    console.log('🔍 DEBUG - Categoria populada:', transaction.category);
 
     res.status(201).json({
       message: 'Transação criada com sucesso',
