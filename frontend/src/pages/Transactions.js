@@ -242,34 +242,29 @@ const Transactions = () => {
         </div>
       </div>
 
-      {/* Filter Section - Agrupado em card */}
-      <div className="filter-section">
-        <div className="flex items-center mb-4">
-          <Filter className="w-5 h-5 text-gray-400 mr-2" />
-          <h3 className="text-lg font-semibold text-gray-900">Filtros e Busca</h3>
-        </div>
-        
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-          <form onSubmit={handleSearch} className="flex-1 max-w-md">
+      {/* Filter Section - Simplificado */}
+      <div className="bg-white rounded-lg border border-gray-200 p-4 mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+          <form onSubmit={handleSearch} className="flex-1">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-5 w-5 text-gray-400" />
+                <Search className="h-4 w-4 text-gray-400" />
               </div>
               <input
                 type="text"
                 name="search"
                 placeholder="Buscar transações..."
-                className="input pl-10"
+                className="input pl-10 text-sm"
                 defaultValue={filters.search}
               />
             </div>
           </form>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex gap-2">
             <select
               value={filters.type}
               onChange={(e) => handleFilterChange('type', e.target.value)}
-              className="input"
+              className="input text-sm"
             >
               <option value="">Todos os tipos</option>
               <option value="income">Receitas</option>
@@ -279,7 +274,7 @@ const Transactions = () => {
             <select
               value={filters.category}
               onChange={(e) => handleFilterChange('category', e.target.value)}
-              className="input"
+              className="input text-sm"
             >
               <option value="">Todas as categorias</option>
               {categories.map(category => (
@@ -289,8 +284,8 @@ const Transactions = () => {
               ))}
             </select>
 
-            <button className="btn btn-outline">
-              <Download className="w-4 h-4 mr-2" />
+            <button className="btn btn-outline btn-sm">
+              <Download className="w-4 h-4 mr-1" />
               Exportar
             </button>
           </div>
