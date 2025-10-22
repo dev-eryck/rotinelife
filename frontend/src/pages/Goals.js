@@ -90,7 +90,7 @@ const Goals = () => {
       } else {
         // Nova meta via backend
         const goalData = {
-          name: data.name,
+          name: data.title,
           target: parseFloat(data.target) || 0,
           description: data.description || '',
           deadline: data.deadline || null
