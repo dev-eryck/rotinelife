@@ -66,7 +66,7 @@ const TransactionModal = ({ transaction, categories, onClose, onSave }) => {
     }
   };
 
-  const filteredCategories = categories.filter(cat => cat.type === watchType);
+  const filteredCategories = (categories || []).filter(cat => cat.type === watchType);
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">

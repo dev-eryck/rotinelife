@@ -35,7 +35,7 @@ const Categories = () => {
     }
   };
 
-  const filteredCategories = categories.filter(category => {
+  const filteredCategories = (categories || []).filter(category => {
     if (filter === 'all') return true;
     return category.type === filter;
   });
