@@ -103,7 +103,7 @@ const Transactions = () => {
       setLoading(true);
       
       const category = categories.find(c => c._id === data.category);
-      const amount = data.type === 'income' ? data.amount : -data.amount;
+      const amount = data.type === 'income' ? parseFloat(data.amount) : -parseFloat(data.amount);
       
       // Verificar se é uma despesa e se há saldo suficiente
       if (data.type === 'expense' && !editingTransaction) {

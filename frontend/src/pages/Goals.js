@@ -84,6 +84,7 @@ const Goals = () => {
         const updatedGoal = {
           ...editingGoal,
           ...data,
+          target: parseFloat(data.target) || 0,
           updatedAt: new Date()
         };
         
@@ -94,6 +95,7 @@ const Goals = () => {
         const newGoal = {
           _id: 'goal-' + Date.now(),
           ...data,
+          target: parseFloat(data.target) || 0,
           current: 0,
           percentage: 0,
           status: 'active',
