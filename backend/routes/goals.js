@@ -31,8 +31,12 @@ router.post('/', [
   body('deadline').optional().isISO8601().withMessage('Data limite inválida')
 ], async (req, res) => {
   try {
+    console.log('🔍 DEBUG - Dados recebidos para meta:', req.body);
+    console.log('🔍 DEBUG - Usuário:', req.user._id);
+    
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('❌ ERRO - Validação falhou:', errors.array());
       return res.status(400).json({
         message: 'Dados inválidos',
         errors: errors.array()
@@ -40,6 +44,7 @@ router.post('/', [
     }
 
     const { name, target, description, deadline } = req.body;
+    console.log('🔍 DEBUG - Dados extraídos:', { name, target, description, deadline });
 
     const goal = new Goal({
       user: req.user._id,
