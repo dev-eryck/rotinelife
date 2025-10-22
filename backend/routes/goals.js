@@ -27,7 +27,7 @@ router.post('/', [
   auth,
   body('name').trim().isLength({ min: 1, max: 100 }).withMessage('Nome deve ter entre 1 e 100 caracteres'),
   body('target').isFloat({ min: 0.01 }).withMessage('Valor alvo deve ser maior que zero'),
-  body('description').optional().isString(),
+  body('description').optional().isString().withMessage('Descrição deve ser uma string'),
   body('deadline').optional().isISO8601().withMessage('Data limite inválida')
 ], async (req, res) => {
   try {
