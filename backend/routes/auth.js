@@ -62,18 +62,12 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    // Criar hash da senha
-    console.log('Criando hash da senha...');
-    const salt = await bcrypt.genSalt(12);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    console.log('Hash criado com sucesso:', hashedPassword);
-
-    // Criar usuário
+    // Criar usuário (o middleware do Mongoose fará o hash da senha)
     console.log('Criando usuário...');
     const user = new User({
       name,
       email,
-      password: hashedPassword,
+      password, // Senha em texto plano - o middleware fará o hash
       preferences: {
         currency: 'BRL',
         language: 'pt-BR',
