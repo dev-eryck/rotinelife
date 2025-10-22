@@ -1,104 +1,24 @@
 const express = require('express');
-const { body, validationResult, query } = require('express-validator');
+const { body, validationResult } = require('express-validator');
 const { auth } = require('../middleware/auth');
+const Budget = require('../models/Budget');
+const Category = require('../models/Category');
 
 const router = express.Router();
 
 // @route   GET /api/budgets
 // @desc    Obter orçamentos do usuário
 // @access  Private
-router.get('/', [
-  auth,
-  query('active').optional().isBoolean().withMessage('Active deve ser boolean'),
-  query('category').optional().isMongoId().withMessage('Categoria inválida')
-], async (req, res) => {
+router.get('/', auth, async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        message: 'Parâmetros inválidos',
-        errors: errors.array()
-      });
-    }
+    const budgets = await Budget.find({ user: req.user._id })
+      .populate('category', 'name color type icon')
+      .sort({ createdAt: -1 });
 
-    // Modo demo - orçamentos simulados
-    const demoBudgets = [
-      {
-        _id: 'budget-1',
-        category: { name: 'Alimentação', icon: '🍽️', color: '#F44336', type: 'expense' },
-        amount: 2000,
-        period: 'monthly',
-        startDate: new Date(),
-        endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-        isActive: true,
-        alertThreshold: 80,
-        progress: {
-          spent: 1200,
-          budget: 2000,
-          remaining: 800,
-          percentage: 60,
-          isOverBudget: false
-        }
-      },
-      {
-        _id: 'budget-2',
-        category: { name: 'Transporte', icon: '🚗', color: '#607D8B', type: 'expense' },
-        amount: 800,
-        period: 'monthly',
-        startDate: new Date(),
-        endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-        isActive: true,
-        alertThreshold: 80,
-        progress: {
-          spent: 300,
-          budget: 800,
-          remaining: 500,
-          percentage: 37.5,
-          isOverBudget: false
-        }
-      }
-    ];
-
-    res.json(demoBudgets);
+    res.json(budgets);
   } catch (error) {
     console.error('Erro ao buscar orçamentos:', error);
-    res.status(500).json({
-      message: 'Erro interno do servidor'
-    });
-  }
-});
-
-// @route   GET /api/budgets/alerts/threshold
-// @desc    Obter alertas de limite de orçamento
-// @access  Private
-router.get('/alerts/threshold', auth, async (req, res) => {
-  try {
-    // Modo demo - alertas simulados
-    const thresholdAlerts = [
-      {
-        budget: {
-          id: 'budget-1',
-          category: { name: 'Alimentação', icon: '🍽️', color: '#F44336', type: 'expense' },
-          amount: 2000,
-          period: 'monthly'
-        },
-        progress: {
-          spent: 1600,
-          budget: 2000,
-          remaining: 400,
-          percentage: 80,
-          isOverBudget: false
-        },
-        alertType: 'threshold'
-      }
-    ];
-
-    res.json(thresholdAlerts);
-  } catch (error) {
-    console.error('Erro ao obter alertas de limite:', error);
-    res.status(500).json({
-      message: 'Erro interno do servidor'
-    });
+    res.status(500).json({ message: 'Erro interno do servidor' });
   }
 });
 
@@ -108,11 +28,8 @@ router.get('/alerts/threshold', auth, async (req, res) => {
 router.post('/', [
   auth,
   body('category').isMongoId().withMessage('Categoria é obrigatória'),
-  body('amount').isFloat({ min: 0.01 }).withMessage('Valor deve ser maior que zero'),
-  body('period').isIn(['weekly', 'monthly', 'yearly']).withMessage('Período inválido'),
-  body('startDate').isISO8601().withMessage('Data de início inválida'),
-  body('endDate').isISO8601().withMessage('Data de fim inválida'),
-  body('alertThreshold').optional().isInt({ min: 1, max: 100 }).withMessage('Limite de alerta deve ser entre 1 e 100')
+  body('limit').isFloat({ min: 0.01 }).withMessage('Valor deve ser maior que zero'),
+  body('description').optional().isString()
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -123,25 +40,34 @@ router.post('/', [
       });
     }
 
-    // Modo demo - simular criação
-    const budget = {
-      _id: 'budget-' + Date.now(),
-      ...req.body,
+    const { category, limit, description } = req.body;
+
+    // Verificar se a categoria existe e pertence ao usuário
+    const categoryDoc = await Category.findOne({ _id: category, user: req.user._id });
+    if (!categoryDoc) {
+      return res.status(400).json({ message: 'Categoria não encontrada' });
+    }
+
+    const budget = new Budget({
       user: req.user._id,
-      isActive: true,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
+      category,
+      amount: parseFloat(limit),
+      period: 'monthly',
+      startDate: new Date(),
+      endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 dias
+      description: description || ''
+    });
+
+    await budget.save();
+    await budget.populate('category', 'name color type icon');
 
     res.status(201).json({
-      message: 'Orçamento criado com sucesso (modo demo)',
+      message: 'Orçamento criado com sucesso',
       budget
     });
   } catch (error) {
     console.error('Erro ao criar orçamento:', error);
-    res.status(500).json({
-      message: 'Erro interno do servidor'
-    });
+    res.status(500).json({ message: 'Erro interno do servidor' });
   }
 });
 
@@ -150,9 +76,8 @@ router.post('/', [
 // @access  Private
 router.put('/:id', [
   auth,
-  body('amount').optional().isFloat({ min: 0.01 }).withMessage('Valor deve ser maior que zero'),
-  body('period').optional().isIn(['weekly', 'monthly', 'yearly']).withMessage('Período inválido'),
-  body('alertThreshold').optional().isInt({ min: 1, max: 100 }).withMessage('Limite de alerta deve ser entre 1 e 100')
+  body('limit').optional().isFloat({ min: 0.01 }).withMessage('Valor deve ser maior que zero'),
+  body('description').optional().isString()
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -163,39 +88,47 @@ router.put('/:id', [
       });
     }
 
-    // Modo demo - simular atualização
-    const budget = {
-      _id: req.params.id,
-      ...req.body,
-      updatedAt: new Date()
-    };
+    const { limit, description } = req.body;
+    const updateData = {};
 
-    res.json({
-      message: 'Orçamento atualizado com sucesso (modo demo)',
-      budget
-    });
+    if (limit !== undefined) updateData.amount = parseFloat(limit);
+    if (description !== undefined) updateData.description = description;
+
+    const budget = await Budget.findOneAndUpdate(
+      { _id: req.params.id, user: req.user._id },
+      updateData,
+      { new: true, runValidators: true }
+    ).populate('category', 'name color type icon');
+
+    if (!budget) {
+      return res.status(404).json({ message: 'Orçamento não encontrado' });
+    }
+
+    res.json({ message: 'Orçamento atualizado com sucesso', budget });
   } catch (error) {
     console.error('Erro ao atualizar orçamento:', error);
-    res.status(500).json({
-      message: 'Erro interno do servidor'
-    });
+    res.status(500).json({ message: 'Erro interno do servidor' });
   }
 });
 
 // @route   DELETE /api/budgets/:id
-// @desc    Excluir orçamento
+// @desc    Deletar orçamento
 // @access  Private
 router.delete('/:id', auth, async (req, res) => {
   try {
-    // Modo demo - simular exclusão
-    res.json({
-      message: 'Orçamento excluído com sucesso (modo demo)'
+    const budget = await Budget.findOneAndDelete({
+      _id: req.params.id,
+      user: req.user._id
     });
+
+    if (!budget) {
+      return res.status(404).json({ message: 'Orçamento não encontrado' });
+    }
+
+    res.json({ message: 'Orçamento deletado com sucesso' });
   } catch (error) {
-    console.error('Erro ao excluir orçamento:', error);
-    res.status(500).json({
-      message: 'Erro interno do servidor'
-    });
+    console.error('Erro ao deletar orçamento:', error);
+    res.status(500).json({ message: 'Erro interno do servidor' });
   }
 });
 
