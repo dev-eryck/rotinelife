@@ -117,34 +117,45 @@ export const DataProvider = ({ children }) => {
 
   const loadData = async () => {
     try {
+      console.log('🔄 Carregando dados do backend...');
       dispatch({ type: 'SET_LOADING', payload: true });
       
       // Carregar transações
+      console.log('📊 Carregando transações...');
       const transactionsResponse = await axios.get(API_ENDPOINTS.TRANSACTIONS, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      console.log('✅ Transações carregadas:', transactionsResponse.data.transactions);
       dispatch({ type: 'SET_TRANSACTIONS', payload: transactionsResponse.data.transactions });
 
       // Carregar categorias
+      console.log('🏷️ Carregando categorias...');
       const categoriesResponse = await axios.get(API_ENDPOINTS.CATEGORIES, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      console.log('✅ Categorias carregadas:', categoriesResponse.data);
       dispatch({ type: 'SET_CATEGORIES', payload: categoriesResponse.data });
 
       // Carregar orçamentos
+      console.log('💰 Carregando orçamentos...');
       const budgetsResponse = await axios.get(API_ENDPOINTS.BUDGETS, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      console.log('✅ Orçamentos carregados:', budgetsResponse.data);
       dispatch({ type: 'SET_BUDGETS', payload: budgetsResponse.data });
 
       // Carregar metas
+      console.log('🎯 Carregando metas...');
       const goalsResponse = await axios.get(API_ENDPOINTS.GOALS, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      console.log('✅ Metas carregadas:', goalsResponse.data);
       dispatch({ type: 'SET_GOALS', payload: goalsResponse.data });
 
+      console.log('🎉 Todos os dados carregados com sucesso!');
     } catch (error) {
-      console.error('Erro ao carregar dados:', error);
+      console.error('❌ Erro ao carregar dados:', error);
+      console.error('❌ Detalhes do erro:', error.response?.data);
     } finally {
       dispatch({ type: 'SET_LOADING', payload: false });
     }
@@ -237,39 +248,48 @@ export const DataProvider = ({ children }) => {
   // Funções para interagir com o backend
   const addTransaction = async (transactionData) => {
     try {
+      console.log('➕ Adicionando transação:', transactionData);
       const response = await axios.post(API_ENDPOINTS.TRANSACTIONS, transactionData, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      console.log('✅ Transação adicionada:', response.data.transaction);
       dispatch({ type: 'ADD_TRANSACTION', payload: response.data.transaction });
       return { success: true };
     } catch (error) {
-      console.error('Erro ao adicionar transação:', error);
+      console.error('❌ Erro ao adicionar transação:', error);
+      console.error('❌ Detalhes do erro:', error.response?.data);
       return { success: false, error: error.response?.data?.message || 'Erro ao adicionar transação' };
     }
   };
 
   const addBudget = async (budgetData) => {
     try {
+      console.log('💰 Adicionando orçamento:', budgetData);
       const response = await axios.post(API_ENDPOINTS.BUDGETS, budgetData, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      console.log('✅ Orçamento adicionado:', response.data.budget);
       dispatch({ type: 'ADD_BUDGET', payload: response.data.budget });
       return { success: true };
     } catch (error) {
-      console.error('Erro ao adicionar orçamento:', error);
+      console.error('❌ Erro ao adicionar orçamento:', error);
+      console.error('❌ Detalhes do erro:', error.response?.data);
       return { success: false, error: error.response?.data?.message || 'Erro ao adicionar orçamento' };
     }
   };
 
   const addGoal = async (goalData) => {
     try {
+      console.log('🎯 Adicionando meta:', goalData);
       const response = await axios.post(API_ENDPOINTS.GOALS, goalData, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      console.log('✅ Meta adicionada:', response.data.goal);
       dispatch({ type: 'ADD_GOAL', payload: response.data.goal });
       return { success: true };
     } catch (error) {
-      console.error('Erro ao adicionar meta:', error);
+      console.error('❌ Erro ao adicionar meta:', error);
+      console.error('❌ Detalhes do erro:', error.response?.data);
       return { success: false, error: error.response?.data?.message || 'Erro ao adicionar meta' };
     }
   };
