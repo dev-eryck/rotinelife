@@ -11,7 +11,11 @@ const app = express();
 app.use(helmet());
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://rotinelife.netlify.app', 'https://meek-quokka-ac7e0d.netlify.app']
+    ? [
+        'https://rotinelife.netlify.app', 
+        'https://meek-quokka-ac7e0d.netlify.app',
+        'https://rotinelifes.netlify.app'
+      ]
     : 'http://localhost:3000',
   credentials: true
 }));
