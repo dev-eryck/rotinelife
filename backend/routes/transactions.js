@@ -31,7 +31,7 @@ router.get('/', [
     const skip = (page - 1) * limit;
 
     // Construir filtros
-    const filters = { userId: req.user._id };
+    const filters = { user: req.user._id };
     if (type) filters.type = type;
     if (category) filters.category = category;
     if (startDate || endDate) {
@@ -52,7 +52,7 @@ router.get('/', [
 
     // Calcular resumo
     const summary = await Transaction.aggregate([
-      { $match: { userId: req.user._id } },
+      { $match: { user: req.user._id } },
       {
         $group: {
           _id: '$type',
@@ -111,7 +111,7 @@ router.post('/', [
     const { type, amount, description, category, date, paymentMethod } = req.body;
 
     // Verificar se categoria existe e pertence ao usuário
-    const categoryDoc = await Category.findOne({ _id: category, userId: req.user._id });
+    const categoryDoc = await Category.findOne({ _id: category, user: req.user._id });
     if (!categoryDoc) {
       return res.status(400).json({
         message: 'Categoria não encontrada'
@@ -126,7 +126,7 @@ router.post('/', [
       category,
       date: new Date(date),
       paymentMethod: paymentMethod || 'other',
-      userId: req.user._id
+      user: req.user._id
     });
 
     await transaction.save();
@@ -208,7 +208,7 @@ router.delete('/:id', auth, async (req, res) => {
   try {
     const transaction = await Transaction.findOneAndDelete({
       _id: req.params.id,
-      userId: req.user._id
+      user: req.user._id
     });
 
     if (!transaction) {

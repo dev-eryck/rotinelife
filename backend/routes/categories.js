@@ -212,7 +212,7 @@ router.delete('/:id', auth, async (req, res) => {
     // Verificar se há transações usando esta categoria
     const transactionCount = await Transaction.countDocuments({
       category: category._id,
-      userId: req.user._id
+      user: req.user._id
     });
 
     if (transactionCount > 0) {
