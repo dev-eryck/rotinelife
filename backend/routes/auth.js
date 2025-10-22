@@ -26,37 +26,50 @@ router.post('/register', async (req, res) => {
     // Validação manual simples
     const { name, email, password } = req.body;
     
+    console.log('Validando nome:', name, 'length:', name?.length);
     if (!name || name.length < 2) {
+      console.log('Erro: Nome inválido');
       return res.status(400).json({
         message: 'Nome deve ter pelo menos 2 caracteres'
       });
     }
     
+    console.log('Validando email:', email);
     if (!email || !email.includes('@')) {
+      console.log('Erro: Email inválido');
       return res.status(400).json({
         message: 'Email inválido'
       });
     }
     
+    console.log('Validando senha:', password, 'length:', password?.length);
     if (!password || password.length < 6) {
+      console.log('Erro: Senha inválida');
       return res.status(400).json({
         message: 'Senha deve ter pelo menos 6 caracteres'
       });
     }
+    
+    console.log('Validação passou, verificando usuário existente...');
 
     // Verificar se usuário já existe
     const existingUser = await User.findOne({ email });
+    console.log('Usuário existente encontrado:', existingUser ? 'Sim' : 'Não');
     if (existingUser) {
+      console.log('Erro: Usuário já existe');
       return res.status(400).json({
         message: 'Usuário já existe com este email'
       });
     }
 
     // Criar hash da senha
+    console.log('Criando hash da senha...');
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
+    console.log('Hash criado com sucesso');
 
     // Criar usuário
+    console.log('Criando usuário...');
     const user = new User({
       name,
       email,
@@ -69,6 +82,7 @@ router.post('/register', async (req, res) => {
     });
 
     await user.save();
+    console.log('Usuário salvo com sucesso, ID:', user._id);
 
     // Criar categorias padrão para o usuário
     const defaultCategories = [
