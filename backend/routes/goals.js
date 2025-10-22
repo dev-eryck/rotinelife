@@ -18,6 +18,7 @@ router.get('/', auth, async (req, res) => {
       const progress = goal.calculateProgress();
       return {
         ...goal.toObject(),
+        deadline: goal.targetDate, // Mapear targetDate para deadline
         percentage: progress.percentage,
         remaining: progress.remaining,
         daysRemaining: progress.daysRemaining,

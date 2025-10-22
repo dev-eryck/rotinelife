@@ -35,11 +35,14 @@ const Dashboard = () => {
   };
 
   const formatDate = (date) => {
+    if (!date) return 'Data não definida';
+    const dateObj = new Date(date);
+    if (isNaN(dateObj.getTime())) return 'Data inválida';
     return new Intl.DateTimeFormat('pt-BR', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric'
-    }).format(new Date(date));
+    }).format(dateObj);
   };
 
   const handleStatCardClick = (type) => {
