@@ -71,14 +71,14 @@ router.post('/register', [
 
     // Criar categorias padrão para o usuário
     const defaultCategories = [
-      { name: 'Alimentação', type: 'expense', color: '#FF6B6B', userId: user._id },
-      { name: 'Transporte', type: 'expense', color: '#4ECDC4', userId: user._id },
-      { name: 'Lazer', type: 'expense', color: '#45B7D1', userId: user._id },
-      { name: 'Saúde', type: 'expense', color: '#96CEB4', userId: user._id },
-      { name: 'Educação', type: 'expense', color: '#FFEAA7', userId: user._id },
-      { name: 'Salário', type: 'income', color: '#6C5CE7', userId: user._id },
-      { name: 'Freelance', type: 'income', color: '#A29BFE', userId: user._id },
-      { name: 'Investimentos', type: 'income', color: '#FD79A8', userId: user._id }
+      { name: 'Alimentação', type: 'expense', color: '#FF6B6B', user: user._id },
+      { name: 'Transporte', type: 'expense', color: '#4ECDC4', user: user._id },
+      { name: 'Lazer', type: 'expense', color: '#45B7D1', user: user._id },
+      { name: 'Saúde', type: 'expense', color: '#96CEB4', user: user._id },
+      { name: 'Educação', type: 'expense', color: '#FFEAA7', user: user._id },
+      { name: 'Salário', type: 'income', color: '#6C5CE7', user: user._id },
+      { name: 'Freelance', type: 'income', color: '#A29BFE', user: user._id },
+      { name: 'Investimentos', type: 'income', color: '#FD79A8', user: user._id }
     ];
 
     await Category.insertMany(defaultCategories);

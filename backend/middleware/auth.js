@@ -14,12 +14,15 @@ const auth = async (req, res, next) => {
     const secret = process.env.JWT_SECRET || 'rotinelife_demo_secret_key_2024';
     const decoded = jwt.verify(token, secret);
     
-    // Modo demo - simular usuário
-    req.user = {
-      _id: decoded.id,
-      name: 'Usuário Demo',
-      email: 'demo@rotinelife.com'
-    };
+    // Buscar usuário real no banco
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(401).json({ 
+        message: 'Usuário não encontrado' 
+      });
+    }
+    
+    req.user = user;
     next();
   } catch (error) {
     if (error.name === 'JsonWebTokenError') {
@@ -50,12 +53,11 @@ const optionalAuth = async (req, res, next) => {
       const secret = process.env.JWT_SECRET || 'rotinelife_demo_secret_key_2024';
       const decoded = jwt.verify(token, secret);
       
-      // Modo demo - simular usuário
-      req.user = {
-        _id: decoded.id,
-        name: 'Usuário Demo',
-        email: 'demo@rotinelife.com'
-      };
+      // Buscar usuário real no banco
+      const user = await User.findById(decoded.id);
+      if (user) {
+        req.user = user;
+      }
     }
     
     next();

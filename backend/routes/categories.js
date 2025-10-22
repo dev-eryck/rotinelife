@@ -25,7 +25,7 @@ router.get('/', [
     const { type } = req.query;
     
     // Construir filtros
-    const filters = { userId: req.user._id };
+    const filters = { user: req.user._id };
     if (type) filters.type = type;
 
     // Buscar categorias
@@ -76,7 +76,7 @@ router.post('/', [
     // Verificar se já existe categoria com mesmo nome
     const existingCategory = await Category.findOne({
       name: { $regex: new RegExp(`^${name}$`, 'i') },
-      userId: req.user._id,
+      user: req.user._id,
       type
     });
 
@@ -88,14 +88,14 @@ router.post('/', [
 
     // Obter próximo sortOrder
     const lastCategory = await Category.findOne({
-      userId: req.user._id,
+      user: req.user._id,
       type
     }).sort({ sortOrder: -1 });
 
     const sortOrder = lastCategory ? lastCategory.sortOrder + 1 : 0;
 
     const category = new Category({
-      userId: req.user._id,
+      user: req.user._id,
       name,
       type,
       icon,
@@ -147,7 +147,7 @@ router.put('/:id', [
 
     const category = await Category.findOne({
       _id: req.params.id,
-      userId: req.user._id
+      user: req.user._id
     });
 
     if (!category) {
@@ -162,7 +162,7 @@ router.put('/:id', [
     if (name && name !== category.name) {
       const existingCategory = await Category.findOne({
         name: { $regex: new RegExp(`^${name}$`, 'i') },
-        userId: req.user._id,
+        user: req.user._id,
         type: category.type,
         _id: { $ne: category._id }
       });
@@ -200,7 +200,7 @@ router.delete('/:id', auth, async (req, res) => {
   try {
     const category = await Category.findOne({
       _id: req.params.id,
-      userId: req.user._id
+      user: req.user._id
     });
 
     if (!category) {
