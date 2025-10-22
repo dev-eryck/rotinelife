@@ -160,10 +160,21 @@ router.post('/login', async (req, res) => {
 
     // Verificar senha
     console.log('Verificando senha...');
+    console.log('Senha recebida:', password);
+    console.log('Hash armazenado:', user.password);
+    console.log('Hash armazenado length:', user.password?.length);
+    
     const isMatch = await bcrypt.compare(password, user.password);
     console.log('Senha correta:', isMatch);
+    
     if (!isMatch) {
       console.log('Erro: Senha incorreta');
+      // Vamos testar se o problema é no hash
+      console.log('Testando hash da senha recebida...');
+      const testHash = await bcrypt.hash(password, 10);
+      const testMatch = await bcrypt.compare(password, testHash);
+      console.log('Teste de hash funcionou:', testMatch);
+      
       return res.status(400).json({
         message: 'Credenciais inválidas'
       });
