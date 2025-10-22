@@ -255,7 +255,7 @@
   
   /* Dashboard cards - Design melhorado com sombras suaves */
   .stat-card {
-    @apply bg-white rounded-xl border border-gray-200 p-8 hover:shadow-lg transition-all duration-300 cursor-pointer;
+    @apply bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-all duration-300 cursor-pointer;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
   
@@ -368,7 +368,7 @@
     }
     
     .stat-card {
-      @apply p-6;
+      @apply p-4;
     }
   }
 }

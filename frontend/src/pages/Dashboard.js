@@ -84,7 +84,7 @@ const Dashboard = () => {
       </div>
 
       {/* Stats Cards - Clicáveis */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div 
           className="stat-card"
           onClick={() => handleStatCardClick('income')}
@@ -160,30 +160,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div 
-          className="stat-card"
-          onClick={() => handleStatCardClick('monthly')}
-        >
-          <div className="flex items-center">
-            <div className="icon-container icon-container-purple">
-              <Target className="w-6 h-6" />
-            </div>
-            <div className="ml-4">
-              <div className="flex items-center">
-                <p className="stat-label">Economia do Mês</p>
-                <div className="tooltip ml-1">
-                  <HelpCircle className="w-4 h-4 text-gray-400" />
-                  <span className="tooltip-text">
-                    Balanço mensal (Receitas - Despesas do mês atual)
-                  </span>
-                </div>
-              </div>
-              <p className={`stat-value ${stats.monthlyBalance >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {formatCurrency(stats.monthlyBalance)}
-              </p>
-            </div>
-          </div>
-        </div>
 
         <div 
           className="stat-card"
