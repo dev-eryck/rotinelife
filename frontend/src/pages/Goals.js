@@ -192,8 +192,13 @@ const Goals = () => {
 
   const activeGoals = goals.filter(g => g.status === 'active');
   const completedGoals = goals.filter(g => g.status === 'completed');
-  const totalSaved = goals.reduce((sum, g) => sum + g.current, 0);
-  const totalTarget = goals.reduce((sum, g) => sum + g.target, 0);
+  const totalSaved = goals.reduce((sum, g) => sum + (g.current || 0), 0);
+  const totalTarget = goals.reduce((sum, g) => sum + (g.target || 0), 0);
+  
+  // Debug: verificar se há duplicação
+  console.log('Goals:', goals);
+  console.log('Total Saved:', totalSaved);
+  console.log('Total Target:', totalTarget);
 
   return (
     <div className="space-y-6">

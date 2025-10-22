@@ -76,6 +76,7 @@ const Budgets = () => {
         const updatedBudget = {
           ...editingBudget,
           ...data,
+          limit: parseFloat(data.limit) || 0,
           category,
           updatedAt: new Date()
         };
@@ -87,6 +88,7 @@ const Budgets = () => {
         const newBudget = {
           _id: 'budget-' + Date.now(),
           ...data,
+          limit: parseFloat(data.limit) || 0,
           category,
           spent: 0,
           percentage: 0,
@@ -132,9 +134,14 @@ const Budgets = () => {
   };
 
   // Calcular totais dos orçamentos
-  const totalBudgeted = budgets.reduce((sum, b) => sum + b.limit, 0);
-  const totalSpent = budgets.reduce((sum, b) => sum + b.spent, 0);
+  const totalBudgeted = budgets.reduce((sum, b) => sum + (b.limit || 0), 0);
+  const totalSpent = budgets.reduce((sum, b) => sum + (b.spent || 0), 0);
   const totalRemaining = totalBudgeted - totalSpent;
+  
+  // Debug: verificar se há duplicação
+  console.log('Budgets:', budgets);
+  console.log('Total Budgeted:', totalBudgeted);
+  console.log('Total Spent:', totalSpent);
 
   return (
     <div className="space-y-6">
